@@ -1,34 +1,24 @@
 const admin = require("firebase-admin");
-const db = admin.firestore();
+const {
+  fetchTokens,
+  sendNotificationToUser,
+} = require("../helpers/notificationHelper");
 
-const storeToken = async (req, res) => {
-  const { userId, token } = req.body;
-
-  console.log("Received userId:", userId);
-  console.log("Received token:", token);
-
-  if (!userId || !token) {
-    return res
-      .status(400)
-      .json({ error: "Both userId and FCM token are required" });
-  }
-
+const sendNotification = async (req, res) => {
   try {
-    const tokenDoc = {
-      token,
-      createdAt: new Date(),
-    };
-
-    // Ensure userId is a non-empty string
-    await db.collection("fcmTokens").doc(userId).set(tokenDoc);
-
-    res.status(201).json({ message: "Token stored successfully" });
+    let { title, content } = req.body;
+    console.log(title, content);
+    let tokens = await fetchTokens();
+    console.log(tokens);
+    let result = await sendNotificationToUser(title, content, tokens);
+    console.log("sucessfully send the messages...");
+    res.status(200).send({ sucess: true });
   } catch (error) {
-    console.error("Error storing token:", error);
-    res.status(500).json({ error: "Failed to store token" });
+    console.log(error);
+    res.json({ error });  
   }
 };
 
 module.exports = {
-  storeToken,
+  sendNotification,
 };

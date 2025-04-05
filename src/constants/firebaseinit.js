@@ -6,4 +6,6 @@ const firebaseInit = admin.initializeApp({
   databaseURL: process.env.DATABASE_URL,
 });
 
-module.exports = firebaseInit;
+const db = admin.firestore();
+
+module.exports = {firebaseInit,db,admin};

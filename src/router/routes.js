@@ -1,7 +1,9 @@
 const express = require("express");
+const { sendNotification } = require("../controller/controllers");
 const router = express.Router();
-const { storeToken } = require("../controller/controllers.js");
 
-router.post("/storeToken", storeToken);
+
+router.post("/sendnotification",sendNotification);
+
 
 module.exports = router;
